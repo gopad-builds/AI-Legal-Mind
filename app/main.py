@@ -1,0 +1,33 @@
+from fastapi import FastAPI
+from app.utils.text_utils import clean_text,count_words
+from app.utils.document_utils import sample_document,inspect_document,get_unique_sections,get_total_word_count,get_case_date
+from app.api.document import router 
+
+app= FastAPI()
+app.include_router(router)
+
+@app.get("/health")
+def health():
+    return {
+    "application": "LegalMind AI",
+    "status": "running"
+}
+
+@app.get("/text-test")
+def text_test(text):
+    cleaned_text=clean_text(text)
+    words_count=count_words(cleaned_text)
+    return {"original text":text,
+            "Cleaned text": cleaned_text,
+            "Word count": words_count}
+
+@app.get("/document-test")
+def document_text():
+    inspection=inspect_document(sample_document)
+    unique_sections=get_unique_sections(sample_document)
+    total_word_count=get_total_word_count(sample_document)
+    case_date=get_case_date(sample_document)
+    return {"Document Inspection": inspection,
+            "Unique Sections": unique_sections,
+            "Total Word Count": total_word_count,
+            "Case Date": case_date}
