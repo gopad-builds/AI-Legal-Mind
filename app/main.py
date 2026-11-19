@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from app.utils.text_utils import clean_text,count_words
 from app.utils.document_utils import sample_document,inspect_document,get_unique_sections,get_total_word_count,get_case_date
-from app.api.document import router 
+from app.api.document import document_router
+from app.api.upload import upload_router 
 from app.core.config import Settings
 from app.core.logging_config import setup_logging
 import logging
@@ -18,7 +19,8 @@ app = FastAPI(
     debug=settings.debug
 )
 
-app.include_router(router)
+app.include_router(document_router)
+app.include_router(upload_router)
 
 logger.info("LegalMindAI started successfully")
 
@@ -48,3 +50,5 @@ def document_text():
             "Unique Sections": unique_sections,
             "Total Word Count": total_word_count,
             "Case Date": case_date}
+
+
