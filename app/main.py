@@ -2,12 +2,29 @@ from fastapi import FastAPI
 from app.utils.text_utils import clean_text,count_words
 from app.utils.document_utils import sample_document,inspect_document,get_unique_sections,get_total_word_count,get_case_date
 from app.api.document import router 
+from app.core.config import Settings
+from app.core.logging_config import setup_logging
+import logging
 
-app= FastAPI()
+
+
+
+settings = Settings()
+setup_logging()
+logger = logging.getLogger(__name__)
+app = FastAPI(
+    title=settings.app_name,
+    version=settings.app_version,
+    debug=settings.debug
+)
+
 app.include_router(router)
+
+logger.info("LegalMindAI started successfully")
 
 @app.get("/health")
 def health():
+    logger.info("Health check endpoint called.")
     return {
     "application": "LegalMind AI",
     "status": "running"
