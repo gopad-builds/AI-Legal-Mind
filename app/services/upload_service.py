@@ -62,7 +62,7 @@ async def safe_upload_file(file: UploadFile) -> dict:
     )
 
     return {
-        "document_id": str(uuid.uuid4()),
+        "document_id":  uuid.uuid4().int >> 96,
         "file_name": safe_filename,
         "status": "UPLOADED",
         "message": f"File '{original_filename}' uploaded and saved successfully.",
