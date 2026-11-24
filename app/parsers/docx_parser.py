@@ -14,7 +14,8 @@ def extract_docx_document(file_path: str) -> dict:
             "unit_type": "paragraph",
             "paragraph_number": paragraph_number,
             "page_number": None,
-            "text": paragraph.text.strip()
+            "text": paragraph.text.strip(),
+            "extraction_method": "python-docx"
         })
         paragraph_number += 1
 

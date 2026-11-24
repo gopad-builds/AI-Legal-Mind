@@ -1,8 +1,7 @@
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel
 
 class UploadResponse(BaseModel):
-    document_id: int
+    document_id: str
     file_name: str
     message: str
     status: str

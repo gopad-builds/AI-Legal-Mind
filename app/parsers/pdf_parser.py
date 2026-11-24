@@ -5,30 +5,35 @@ from pathlib import Path
 import io
 import logging
 
-
-logger=logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 SCANNED_TEXT_THRESHOLD = 20
 
-def _ocr_page(page) -> str:
+def _ocr_page(page) -> tuple[str, str]:
     try:
         pixmap = page.get_pixmap(dpi=200)
         img = Image.open(io.BytesIO(pixmap.tobytes("png")))
-        return pytesseract.image_to_string(img)
+        text = pytesseract.image_to_string(img)
+        return text, "tesseract"
     except Exception as e:
         logger.error(f"OCR failed on page {page.number + 1}: {e}")
-        return ""
-
+        return "", "ocr_failed"
 
 def _extract_page(page, page_number: int) -> dict:
     text = page.get_text()
     is_scanned = len(text.strip()) < SCANNED_TEXT_THRESHOLD
 
+    if is_scanned:
+        text, extraction_method = _ocr_page(page)
+    else:
+        extraction_method = "pymupdf"
+
     return {
         "unit_type": "page",
         "paragraph_number": None,
         "page_number": page_number,
-        "text": _ocr_page(page) if is_scanned else text,
-        "is_scanned": is_scanned
+        "text": text,
+        "is_scanned": is_scanned,
+        "extraction_method": extraction_method
     }
 
 def extract_pdf_document(file_path: str) -> dict:

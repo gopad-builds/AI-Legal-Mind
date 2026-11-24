@@ -1,0 +1,20 @@
+{
+  "documents": [
+    {
+      "document_id": "1b1d5cc5-5635-43a0-8eee-c87cb08e49fd",
+      "original_filename": "24596_2025_1_1501_67131_Judgement_19-Dec-2025.pdf",
+      "stored_filename": "1b1d5cc5-5635-43a0-8eee-c87cb08e49fd.pdf",
+      "file_hash": "149a27ffaf30347e010bc3c8746588123567ed18f89a916f2777451e80be82f1",
+      "file_type": "pdf",
+      "status": "PROCESSED"
+    },
+    {
+      "document_id": "0352c9d8-501f-4716-bfbc-4a9ff7607e4a",
+      "original_filename": "hybrid_scanned_judgment.pdf",
+      "stored_filename": "0352c9d8-501f-4716-bfbc-4a9ff7607e4a.pdf",
+      "file_hash": "7db30fac82aae6bcab75890a386ff63469c0103f62643e2598db21d7cce107f2",
+      "file_type": "pdf",
+      "status": "PROCESSED"
+    }
+  ]
+}
