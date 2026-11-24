@@ -1,5 +1,35 @@
 import pymupdf
+import pytesseract
+from PIL import Image
 from pathlib import Path
+import io
+import logging
+
+
+logger=logging.getLogger(__name__)
+SCANNED_TEXT_THRESHOLD = 20
+
+def _ocr_page(page) -> str:
+    try:
+        pixmap = page.get_pixmap(dpi=200)
+        img = Image.open(io.BytesIO(pixmap.tobytes("png")))
+        return pytesseract.image_to_string(img)
+    except Exception as e:
+        logger.error(f"OCR failed on page {page.number + 1}: {e}")
+        return ""
+
+
+def _extract_page(page, page_number: int) -> dict:
+    text = page.get_text()
+    is_scanned = len(text.strip()) < SCANNED_TEXT_THRESHOLD
+
+    return {
+        "unit_type": "page",
+        "paragraph_number": None,
+        "page_number": page_number,
+        "text": _ocr_page(page) if is_scanned else text,
+        "is_scanned": is_scanned
+    }
 
 def extract_pdf_document(file_path: str) -> dict:
     doc = pymupdf.open(file_path)
@@ -14,12 +44,7 @@ def extract_pdf_document(file_path: str) -> dict:
                 "file_type": "pdf"
             },
             "content": [
-                {
-                    "unit_type": "page",
-                    "paragraph_number": None,
-                    "page_number": i + 1,
-                    "text": doc.load_page(i).get_text()
-                }
+                _extract_page(doc.load_page(i), i + 1)
                 for i in range(doc.page_count)
             ]
         }

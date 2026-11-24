@@ -4,6 +4,7 @@ from app.services.document_service import process_document_metadata
 import logging
 from pathlib import Path
 from app.parsers.pdf_parser import extract_pdf_document
+from app.parsers.docx_parser import extract_docx_document
 from app.core.config import settings
 document_router=APIRouter()
 
@@ -31,6 +32,5 @@ def docx_test():
     upload_folder = Path(settings.upload_dir)
     docx_files = list(upload_folder.glob("*.docx"))
     if not docx_files:
-        raise HTTPException(status_code=404, detail="No DOCX found in storage folder.")
-    from app.parsers.docx_parser import extract_docx_document
+        raise HTTPException(status_code=404, detail="No DOCX found in storage folder.")    
     return extract_docx_document(str(docx_files[0]))
