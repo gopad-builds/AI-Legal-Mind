@@ -7,6 +7,7 @@ from pathlib import Path
 from app.parsers.pdf_parser import extract_pdf_document
 from app.parsers.docx_parser import extract_docx_document
 from app.schemas.ingestion import IngestionError, IngestionResponse
+from app.utils.text_utils import clean_document
 
 logger = logging.getLogger(__name__)
 
@@ -191,6 +192,8 @@ def process_document(upload_result: dict) -> IngestionResponse:
 
     content = parsed.get("content", [])
     parsed_metadata = parsed.get("metadata", {})
+    # Clean extracted text before quality check and provenance
+    content = clean_document(content)
     total_units = len(content)
     status, errors = _quality_check(content)
 
